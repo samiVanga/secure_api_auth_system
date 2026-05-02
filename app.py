@@ -44,6 +44,21 @@ def login():
         return jsonify({"message": "Login Failed"}), 401
 
 
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.get_json()
+
+    username = data["username"]
+    password = data["password"]
+
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user = User(username=username, password=hashed_password)
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({"message": "User registered successfully"})
+
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
