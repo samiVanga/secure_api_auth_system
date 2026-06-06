@@ -8,8 +8,7 @@ from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config["JWT_SECRET_KEY"] = "change-this-secret-key"
+app.config.from_pyfile("config.py")
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
