@@ -1,2 +1,0 @@
-JWT_SECRET_KEY= "jV6ugs7OztwoxL7LNBDWczsHPKFZ6Rbttau6G61yaBY"
-SQLALCHEMY_DATABASE_URI= "sqlite:///site.db"
