@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <h1>Register</h1>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+
+        <body>
+        <div class="container">
+            <label for="registerusername">Username: </label>
+            <input type="text" id="registerusername" name="registerusername"><br><br>
+            <label for="registerpassword">Password: </label>
+            <input type="password" id="registerpassword" name="registerpassword"><br><br>
+            <label for="reregisterpassword">Password: </label>
+            <input type="password" id="reregisterpassword" name="reregisterpassword"><br><br>
+            <input type="button" onclick="registerUser()" value="Register">
+
+
+            <p id="responseMessage"></p>
+
+            <a href="/">Back to Login</a>
+
+        </div>
+
+        <script src="/static/script.js"></script>
+
+    </body>
+</html>

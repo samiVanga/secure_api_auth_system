@@ -1,12 +1,15 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_cors import CORS
+import re
 
 app = Flask(__name__)
+CORS(app)
 
 app.config.from_pyfile("config.py")
 
@@ -32,12 +35,28 @@ class Note(db.Model):
     content=db.Column(db.String(200),nullable=False)
     user_id=db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
 
+def validatePassword(password):
+    returnMessage=""
+    if len(password)<8:
+        returnMessage+= "Password needs to a minimum of 8 characters\n"
+    if not re.search(r"[A-Z]",password):
+        returnMessage+= "Password needs to contain at least one uppercase character\n"
+    if not re.search(r"[0-9]",password):
+        returnMessage+= "Password needs to contain at least one number\n"
+    if not re.search(r"[!@£#$%^&*():?\~/;<>|{}+=_-`]", password):
+        returnMessage+= "Password needs to contain at least one valid special character\n"
+    if len(returnMessage)>0:
+        return returnMessage
+    return None
 
 
 @app.route("/")
 def home():
-    return "Flask app is running!"
+    return render_template('index.html')
 
+@app.route("/register-page")
+def register_page():
+    return render_template('register.html')
 
 @app.route("/login", methods=["POST"])
 @limiter.limit("5 per minute")
@@ -62,9 +81,27 @@ def register():
 
     username = data["username"]
     password = data["password"]
+    repassword= data['repassword']
 
+
+    if not username or not password:
+        return jsonify({"message":"please enter a username and password"}),400
+    
+    if not repassword:
+        return jsonify({"message":"please retype in your password"}),400
+    
+    if password != repassword:
+        return jsonify({"message":"your password needs to match"}),400
+    
     if User.query.filter_by(username=username).first():
         return jsonify({"message": "Username already exists please choose a different username"}), 400
+    
+    passwordError=validatePassword(password)
+
+    if passwordError:
+        return jsonify({"message":passwordError}),400
+
+    
 
     hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
     new_user = User(username=username,password=hashed_password)

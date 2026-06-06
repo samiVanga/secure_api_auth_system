@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <h1>WELCOME!</h1>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+
+    <body>
+
+        <div class="container">
+            <h1>Login</h1>
+            <label for="username">Username: </label>
+            <input type="text" id="username" name="username"><br><br>
+            <label for="password">Password: </label>
+            <input type="password" id="password" name="password"><br><br>
+            <input type="button" onclick="userLogin()" value="Login">
+            <a href="/register-page">Register</a>
+
+            <p id="responseMessage"></p>
+
+        </div>
+
+
+        <script src="/static/script.js"></script>
+    </body>
+</html>
